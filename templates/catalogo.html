@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catálogo de Produtos</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Open+Sans">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: calc(25% - 20px); /* 4 items per row */
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .product img {
+            max-width: 100%;
+            height: auto;
+        }
+        .product-info {
+            margin-top: 10px;
+        }
+        .price {
+            font-size: 1.2em;
+            color: #007BFF;
+        }
+        .botao-adicionar {
+            margin-top: 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Catálogo de Produtos</h1>
+        <a href="{{ url_for('ver_carrinho') }}" class="btn btn-primary">Ver Carrinho</a>
+    </div>
+    <ul class="product-container">
+        {% for produto in produtos %}
+        <li class="product">
+            <img src="{{ produto.imagem }}" alt="{{ produto.nome }}">
+            <div class="product-info">
+                <h2>{{ produto.nome }}</h2>
+                <p>{{ produto.descricao }}</p>
+                <p class="price">{{ produto.preco }}</p>
+                <form action="{{ url_for('adicionar_ao_carrinho') }}" method="POST">
+                    <input type="hidden" name="produto_nome" value="{{ produto.nome }}">
+                    <input type="hidden" name="produto_preco" value="{{ produto.preco }}">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" name="quantidade" value="1" min="1" required>
+                    <button type="submit" class="btn btn-primary botao-adicionar">Adicionar ao Carrinho</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

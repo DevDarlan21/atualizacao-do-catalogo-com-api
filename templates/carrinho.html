@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
+    <link rel="stylesheet" href="static/bootstrap.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        #carrinho {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        #carrinho-lista div {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        #carrinho-lista div:last-child {
+            border-bottom: none;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Carrinho de Compras</h1>
+
+    <div id="carrinho">
+        <h2>Produtos no Carrinho:</h2>
+        <div id="carrinho-lista">
+            {% if carrinho %}
+                {% for item in carrinho %}
+                    <div>
+                        {{ item.nome }} - {{ item.preco }} (Quantidade: {{ item.quantidade }})
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>O carrinho está vazio.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="cart-container">
+        <h2>Seu Carrinho</h2>
+        <div class="list-group">
+            {% if carrinho %}
+                {% for item in carrinho %}
+                <div class="cart-item list-group-item">
+                    <div>
+                        <h3>{{ item.nome }} ({{ item.quantidade }})</h3>
+                        <p>{{ item.preco }}</p>
+                    </div>
+                    <form action="{{ url_for('remover_do_carrinho') }}" method="POST">
+                        <input type="hidden" name="produto_nome" value="{{ item.nome }}">
+                        <label for="quantidade">Quantidade a remover:</label>
+                        <input type="number" name="quantidade" value="1" min="1" required>
+                        <button type="submit" class="btn btn-danger">Remover</button>
+                    </form>
+                </div>
+                {% endfor %}
+                <div>
+                    <h3>Total: R$ {{ '%.2f' | format(total) }}</h3> <!-- Exibe o total aqui -->
+                </div>
+                <form action="{{ url_for('finalizar_compra') }}" method="GET" target="_blank">
+                    <button type="submit" class="btn btn-success">Finalizar Compra</button>
+                </form>
+            {% else %}
+                <p class="list-group-item">Seu carrinho está vazio.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{{ url_for('catalogo') }}">Voltar ao Catálogo</a>
+</body>
+</html>
